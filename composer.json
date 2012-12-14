@@ -1,0 +1,21 @@
+{
+    "name": "aura/micro",
+    "description": "A micro framework implementation using Aura.Router following the Silex API.",
+    "keywords": [ "route", "router", "routing" ],
+    "version": "0.1.0-dev",
+    "license": "MIT",
+    "authors": [
+	    {
+            "name": "Stan Lemon"
+        }
+    ],
+    "require": {
+        "aura/router": "1.0.*"
+    },
+    "autoload": {
+        "psr-0": { 
+            "": "src/"
+         }
+    },
+    "minimum-stability": "dev"
+}
