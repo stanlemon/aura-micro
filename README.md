@@ -6,6 +6,8 @@ This is a simple Micro Framework implementation using Aura.Router.  It is design
 
 ### Basic micro-framework implementation
 
+	<?php
+
 	$app = new Aura\Micro\Micro();
 
 	$app->before(function(){
