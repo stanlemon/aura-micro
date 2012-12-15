@@ -253,7 +253,7 @@ class Micro
      * 
      * @return void
      */
-    public function run($path = null)
+    public function run($path = null, $request = null)
     {
         try {
             if (is_null($path)) {
@@ -263,8 +263,12 @@ class Micro
                     strlen(dirname($_SERVER['PHP_SELF']))
                 );
             }
+            
+            if (is_null($request)) {
+                $request = $_SERVER;
+            }
 
-            if (false === ($route = $this->map->match($path, $_SERVER))) {
+            if (false === ($route = $this->map->match($path, $request))) {
                 throw new \InvalidArgumentException("No route found!");
             } else {
                 $params = $route->values;
