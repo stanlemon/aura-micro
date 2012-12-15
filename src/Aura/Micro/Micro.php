@@ -239,14 +239,16 @@ class Micro
      * 
      * @return void
      */
-    public function run()
+    public function run($path = null)
     {
         try {
-            // Just the path of whatever is exeucting.
-            $path = substr(
-                $_SERVER['REQUEST_URI'],
-                strlen(dirname($_SERVER['PHP_SELF']))
-            );
+            if (is_null($path)) {
+                // Just the path of whatever is exeucting.
+                $path = substr(
+                    $_SERVER['REQUEST_URI'],
+                    strlen(dirname($_SERVER['PHP_SELF']))
+                );
+            }
 
             if (false === ($route = $this->map->match($path, $_SERVER))) {
                 throw new \InvalidArgumentException("No route found!");
