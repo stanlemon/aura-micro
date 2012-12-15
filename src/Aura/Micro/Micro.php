@@ -80,10 +80,24 @@ class Micro
 
     /**
      * Create a Micro framework application
+     * 
+     * @uses Aura\Router\Map
+     * @uses Aura\Router\DefinitionFactory
+     * @uses Aura\Router\RouteFactory
      */
     public function __construct()
     {
         $this->map = new Map(new DefinitionFactory, new RouteFactory);
+    }
+
+    /**
+     * Get the app router object so it can be worked with directly
+     *
+     * @return Aura\Router\Map
+     */
+    public function getMap()
+    {
+        return $this->map;
     }
 
     /**
