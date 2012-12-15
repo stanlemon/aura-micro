@@ -1,1 +1,4 @@
 vendor
+build
+cache.properties
+composer.lock
