@@ -77,6 +77,11 @@ class Micro
         'error' => array(),
     );
 
+	/**
+	 * Parameters to look for in function calls
+	 */
+	protected $params = array();
+
 
     /**
      * Create a Micro framework application
@@ -99,6 +104,42 @@ class Micro
     {
         return $this->map;
     }
+
+	/**
+	 * Set a method parameter
+	 *
+	 * @param string $key Name of parameter
+	 * @param mixed $value Value of parameter to be passed
+	 */
+	public function set($key, $value)
+	{
+		if (array_key_exists($key, $this->params)) {
+			throw new \InvalidArgumentException(sprintf("Paramter %s has already been defined", $key));
+		}
+
+		$this->params[$key] = $value;
+
+		return $this;
+	}
+
+	/**
+	 * Fetches a method parameter
+	 *
+	 * @param string $key Name of parameter
+	 * @return mixed The result of the parameter
+	 */
+	public function fetch($key)
+	{
+		if (!array_key_exists($key, $this->params)) {
+			return null; // Die quietly
+		}
+
+		if ($this->params[$key] instanceof \Closure) {
+			$this->params[$key] = $this->params[$key]();
+		}
+
+		return $this->params[$key];
+	}
 
     /**
      * Raw route -> controller add function
@@ -257,13 +298,13 @@ class Micro
     {
         try {
             if (is_null($path)) {
-                // Just the path of whatever is exeucting.
-                $path = substr(
-                    $_SERVER['REQUEST_URI'],
-                    strlen(dirname($_SERVER['PHP_SELF']))
-                );
+				$dir = dirname($_SERVER['PHP_SELF']);
+
+				$path = (strlen($dir) > 1) ? 
+					substr($_SERVER['REQUEST_URI'], strlen($dir)) :
+					$_SERVER['REQUEST_URI'];
             }
-            
+
             if (is_null($request)) {
                 $request = $_SERVER;
             }
@@ -284,7 +325,9 @@ class Micro
                 foreach ($reflection->getParameters() as $parameter) {
                     if (isset($params[$parameter->getName()])) {
                         $args[] = $params[$parameter->getName()];
-                    } else {
+                    } elseif (($value = $this->fetch($parameter->getName())) !== null) {
+						$args[] = $value;
+					} else {
                         $args[] = null;
                     }
                 }
