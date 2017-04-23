@@ -150,7 +150,8 @@ class Micro
      * 
      * @param closure $controller Closure of the controller to be executed
      * 
-     * @return object
+     * @return $this
+     *
      */
     public function add($method, $route, $controller)
     {
@@ -174,7 +175,7 @@ class Micro
      * 
      * @param closure $controller Closure of the controller to be executed
      * 
-     * @return instance of this
+     * @return $this
      */
     public function get($route, $controller)
     {
@@ -188,7 +189,7 @@ class Micro
      * 
      * @param Closure $controller Closure of the controller to be executed
      * 
-     * @return instance of this
+     * @return $this
      */
     public function post($route, $controller)
     {
@@ -202,7 +203,7 @@ class Micro
      * 
      * @param Closure $controller Closure of the controller to be executed
      * 
-     * @return instance of this
+     * @return $this
      */
     public function put($route, $controller)
     {
@@ -216,7 +217,7 @@ class Micro
      * 
      * @param Closure $controller Closure of the controller to be executed
      * 
-     * @return instance of this
+     * @return $this
      */
     public function delete($route, $controller)
     {
@@ -343,5 +344,20 @@ class Micro
         }
 
         $this->applyCallbacks(self::CALLBACK_FINISH);
+    }
+    
+    /**
+     * 
+     * Allows us to call, e.g., $app->map->add() to override stuff
+     * in a seemingly-direct manner.
+     *
+     * @param string $method Method to call.
+     * 
+     * @param array $params Params for the method.
+     * 
+     */
+    public function __call($method, array $params)
+    {
+        return call_user_func_array([$this->map, $method], $params);
     }
 }
